@@ -22,7 +22,7 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 		PRIMARY KEY (`id`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci PACK_KEYS=0 ;
 
-3.	Call the Meta element in your layout's <head>.
+3.	Call the Meta element in your layout's head.
 
 		<?php echo $this->element('meta', array(), array('plugin' => 'Meta'));?>
 
