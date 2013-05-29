@@ -25,10 +25,107 @@ class MetaController extends MetaAppController {
 		$conditions = array();
 		$conditions['Metum.controller'] = $controller;
 		$conditions['Metum.action'] = $action;
+		
+		// look for deepest level templates first
+		$conditions['template'] = 1;
+		if (isset($pass) && !empty($pass)) {
+			$passArray = array_reverse(explode('#', $pass));
+			foreach($passArray as $passPart) {
+				$conditions['Metum.pass'] = str_replace($passPart, '*', str_replace('#', '/', $pass));
+				$data = $this->Metum->find('first', array('conditions' => $conditions));
+				if ($data && count($data)) {
+					return $data;
+				}
+			}
+		}
+		unset($conditions['Metum.pass']);
+		$data = $this->Metum->find('first', array('conditions' => $conditions));
+		if ($data && count($data)) {
+			return $data;
+		}
+		
+		// no templates found. search for single record
+		unset($conditions['template']);
 		if (isset($pass) && !empty($pass)) {
 			$conditions['Metum.pass'] = str_replace('#', '/', $pass);
 		}
 		return $this->Metum->find('first', array('conditions' => $conditions));
+	}
+	
+	public function admin_index() {
+		$filter = $this->_parseFilter();
+		$this->{$this->modelClass}->recursive = 1;
+		$this->Session->write($this->name.'_admin_params', $this->params['named']);
+		$conditions = am($filter, $this->params['named']);
+		unset($conditions['limit']);
+		unset($conditions['show']);
+		unset($conditions['sort']);
+		unset($conditions['page']);
+		unset($conditions['direction']);
+		unset($conditions['step']);
+		foreach ($conditions as $key => $condition) {
+			if (is_string($condition)) {
+				if (!strpos($key, '.')) {
+					unset($conditions[$key]);
+					$conditions[$this->modelClass . '.' . $key] =  $condition;
+				}
+			}
+			
+			if (is_array($key)) {
+				foreach ($key as $sub_key => $sub_condition) {
+					if (!strpos($sub_key, '.')) {
+						unset($conditions[$key][$sub_key]);
+						$conditions[$key][$this->modelClass . '.' . $sub_key] =  $sub_condition;
+					}
+				}
+			}
+		}
+		$this->data = $this->paginate($conditions);
+		$this->render('admin_index');
+	}
+	
+	public function admin_add () {
+		if (!empty ($this->data)) {
+			if ($this->{$this->modelClass}->save($this->data)) {
+				$this->Session->setFlash($this->{$this->modelClass}->name . ' added');
+				$url = am(array('action' => 'index'), $this->Session->read($this->name.'_admin_params'));
+				$this->redirect($url, null, true);
+			} else {
+				$this->Session->setFlash('Error encountered while saving.');
+			}
+		}
+		$this->render('admin_edit');
+	}
+
+	public function admin_delete($id) {
+		if ($this->{$this->modelClass}->delete($id)) {
+			$this->Session->setFlash($this->modelClass . ' with id ' . $id . ' deleted');
+		} else {
+			$this->Session->setFlash('Can\'t delete ' . $this->modelClass . ' with id ' . $id);
+		}
+		
+		$url = am(array('action' => 'index'), $this->Session->read($this->name.'_admin_params'));
+	}
+
+	public function admin_edit($id) {
+		if (!empty ($this->data)) {
+			if ($this->{$this->modelClass}->save($this->data)) {
+				if($this->RequestHandler->isAjax()) {
+					unset($this->request->data[$this->modelClass]['id']);
+					$value = array_pop($this->request->data[$this->modelClass]);
+					echo $value;
+					$this->render(null, 'ajax', '/common/ajax');
+					exit;
+				}
+				$this->Session->setFlash($this->{$this->modelClass}->alias . ' updated');
+				$url = am(array('action' => 'index'), $this->Session->read($this->name.'_admin_params'));
+				$this->redirect($url, null, true);
+			} else {
+				$this->Session->setFlash('Error encountered while saving.');
+			}
+		} else {
+			$this->data = $this->{$this->modelClass}->read(null, $id);
+		}
 	}
 	
 	public function admin_initialize() {
@@ -150,7 +247,8 @@ class MetaController extends MetaAppController {
 	
 	private function _extractDescription($content) {
 		$description = strip_tags($content);
-		$description = preg_replace('/\s\s+/', ' ', $description);
+		$description = preg_replace('/\s\s+/', ' ', $description); // strip whitespace
+		$description = preg_replace('/\[\{\[.*\]\}\]/', '', $description); // strip element plugins
 		$description = substr($description, 0, 150);
 		return $description;
 	}

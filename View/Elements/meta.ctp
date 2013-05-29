@@ -3,6 +3,29 @@ $meta = $this->requestAction('/meta/meta/index/'.$this->request->controller .'/'
 
 if (isset($meta) && is_array($meta)) {
 	extract($meta);
+	// replace variables with field values
+	$tags = array('id', 'name', 'created', 'modified');
+	if (isset($this->viewVars['data'][$this->viewVars['modelClass']])) {
+		$modelData = $this->viewVars['data'][$this->viewVars['modelClass']];
+	} elseif (isset($this->viewVars['data'][0][$this->viewVars['modelClass']])) {
+		$modelData = $this->viewVars['data'][0][$this->viewVars['modelClass']];
+	}
+	
+	if (isset($modelData)) {
+		foreach($tags as $tag) {
+			if (isset($modelData[$tag])) {
+				if (isset($Metum['title']) && !empty($Metum['title'])) {
+				     $Metum['title'] = str_replace('{'.$tag.'}', $modelData[$tag], $Metum['title']);
+				}
+				if (isset($Metum['description']) && !empty($Metum['description'])) {
+				     $Metum['description'] = str_replace('{'.$tag.'}', $modelData[$tag], $Metum['description']);
+				}
+				if (isset($Metum['keywords']) && !empty($Metum['keywords'])) {
+				     $Metum['keywords'] = str_replace('{'.$tag.'}', $modelData[$tag], $Metum['keywords']);
+				}
+			}
+		}
+	}
 }
 /**
  * Set default site title to domain name
