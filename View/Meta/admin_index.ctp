@@ -36,9 +36,17 @@ if(isset($data)):
 <tr class="<?php echo $a%2==0?'even':'odd';?>">
 <td><?php echo ${$modelClass}['path'];?></td>
 
-<td><?php echo ${$modelClass}['title'];?></td>
+<td>
+	<div class="editable" data-id_field="<?php echo "data[$modelClass][id]";?>" id="<?php echo ${$modelClass}['id'];?>" data-column="<?php echo "data[$modelClass][title]";?>">
+		<?php echo stripslashes(${$modelClass}['title']);?>
+	</div>
+</td>
 
-<td><?php echo ${$modelClass}['description'];?></td>
+<td>
+	<div class="editable" data-id_field="<?php echo "data[$modelClass][id]";?>" id="<?php echo ${$modelClass}['id'];?>" data-column="<?php echo "data[$modelClass][description]";?>">
+		<?php echo stripslashes(${$modelClass}['description']);?>
+	</div>
+</td>
 
 <td class="date"><?php echo $this->Time->format('M j, Y g:i A', ${$modelClass}['modified']);?></td>
 
@@ -52,5 +60,19 @@ endif;
 </table>
 
 <?php echo $this->element('paging');?>
+
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function () {
+	$(".editable").each(function(){$(this).editInPlace({
+		url: "<?php echo $this->Html->url(array('action' => 'edit'));?>/" + $(this).attr('id'),
+		element_id: $(this).data('id_field'),
+		update_value: $(this).data('column'),
+		field_type: $(this).data('field_type'),
+		default_text: "Click to add text"
+	})});
+});
+//]]>
+</script>
 
 <?php echo $this->Js->writeBuffer();?>

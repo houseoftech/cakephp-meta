@@ -151,6 +151,35 @@ class MetaController extends MetaAppController {
 			}
 		}
 		
+		if ($this->loadModel('Post')) {
+			if ($posts = $this->Post->find('all', array('fields' => array('id', 'name', 'slug', 'excerpt', 'content')))) {
+				$data = $this->Metum->find('all', array('fields' => array('path')));
+				$data = Set::extract($data, '{n}.Metum.path');
+				foreach ($posts as $post) {
+					$slug = $post['Post']['id'].'/'.$post['Post']['slug'];
+					if (empty($post['Post']['slug'])) {
+						$slug = $post['Post']['id'].'/'.Inflector::slug($post['Post']['name'], Configure::read('slug.replacement'));
+					}
+					if (empty($data) || in_array('/posts/view/'.$slug, $data) == false) {
+						$newData['Metum']['path'] = '/posts/view/'.$slug;
+						$newData['Metum']['controller'] = 'posts';
+						$newData['Metum']['action'] = 'view';
+						$newData['Metum']['pass'] = $slug;
+						$newData['Metum']['title'] = $post['Post']['name'];
+						if (!empty($post['Post']['excerpt'])) {
+							$newData['Metum']['description'] = $this->_extractDescription($post['Post']['excerpt']);
+						} else {
+							$newData['Metum']['description'] = $this->_extractDescription($post['Post']['content']);
+						}
+						$this->Metum->create();
+						$this->Metum->save($newData);
+						$count++;
+						unset($newData);
+					}
+				}
+			}
+		}
+		
 		$data = $this->Metum->find('all', array('fields' => array('path')));
 		$data = Set::extract($data, '{n}.Metum.path');
 		
