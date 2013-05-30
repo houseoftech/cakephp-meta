@@ -84,6 +84,60 @@ class MetaController extends MetaAppController {
 		$this->render('admin_index');
 	}
 	
+	protected function _parseFilter() {
+		$operators = array('equal' => '= ', 'notEqual' => '!= ', 'null' => 'NULL', 'greatherThan' => '> ', 'lessThan' => '< ', 'like' => 'LIKE ', 'between' => 'BETWEEN ', 'in' => 'in');
+		$this->set('filterOptions', $operators);
+
+		$filter = array();
+		if ($this->data) {
+			$operator = false;
+			foreach ($this->data as $alias => $fields) {
+				if (isset($this->$alias)) {
+					$inst = $this->$alias;
+				} elseif(isset($inst->{$this->modelClass}->$alias)) {
+					$inst = $inst->{$this->modelClass}->$alias;
+				} else {
+					$inst = ClassRegistry::init($alias);
+				}
+				$i = 0;
+				foreach ($fields as $field => $value) {
+					$i++;
+					if ($i % 2) {
+						if ($value) {
+							$operator = $operators[$value];
+						} else {
+							$operator = '';
+						}
+						if ($value == 'null') {
+							$field = str_replace('_type', '', $field);
+							$filter[$alias . '.' . $field] = null;
+						}
+					} elseif ($value !== null && $value !== '') {
+						if (!$operator) {
+							$this->data[$alias][$field . '_type'] = 'equal';
+							$operator = '= ';
+						}
+						if ($operator == 'in') {
+							$filter[$alias . '.' . $field] = explode(',', $value);
+						} elseif (is_array($value)) {
+							$value = $inst->deconstruct($field, $value);
+							if ($value) {
+								$filter[$alias . '.' . $field] = $operator . $value;
+							}
+						} else {
+							$filter[$alias . '.' . $field] = $operator . $value;
+						}
+					}
+				}
+			}
+			$this->Session->write($this->modelClass . '.filter', $filter);
+			$this->Session->write($this->modelClass . '.filterForm', $this->data);
+		} elseif ($this->Session->check($this->modelClass . '.filter')) {
+			$filter = $this->Session->read($this->modelClass . '.filter');
+		}
+		return $filter;
+	}
+	
 	public function admin_add () {
 		if (!empty ($this->data)) {
 			if ($this->{$this->modelClass}->save($this->data)) {
