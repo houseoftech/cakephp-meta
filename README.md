@@ -10,6 +10,7 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 
 		CREATE TABLE `meta` (
 		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		`template` tinyint(1) NOT NULL DEFAULT '0',
 		`path` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
 		`controller` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
 		`action` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
