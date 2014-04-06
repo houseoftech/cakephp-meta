@@ -37,10 +37,38 @@ You can add records manually via the form or you can use the link called 'Find N
 
 Given a URL such as *http://your_domain/pages/My-Wonderful-Page-In-Which-I-Explain-All-Things* we can break it down to the following fields stored in the meta table.
 
-1.	Path - This is for your benefit, so you know which page it corresponds to. */pages/My-Wonderful-Page-In-Which-I-Explain-All-Things*
-2.	Controller - *pages*
-3.	Action - *display*
-4.	Pass - *My-Wonderful-Page-In-Which-I-Explain-All-Things*
-5.	Title - *The Explanation of All Things*
-6.	Description - *All things need some sort of explanation. Explaning all things is not always easy, but I will attempt to do so anyways.*
-7.	Keywords - *all things, explanation, explaining, all things explained, explanation of all things*
+###Path
+
+This is for your benefit, so you know which page it corresponds to. */pages/My-Wonderful-Page-In-Which-I-Explain-All-Things*
+
+To create a template use an asterix as a wildcard. /articles/view/* would match any Path beginning with /articles/view/
+
+###Controller
+*pages*
+
+###Action
+*display*
+
+###Pass
+*My-Wonderful-Page-In-Which-I-Explain-All-Things*
+
+When creating a template, leave this field blank.
+
+###Title
+*The Explanation of All Things*
+
+###Description
+*All things need some sort of explanation. Explaning all things is not always easy, but I will attempt to do so anyways.*
+
+###Keywords
+*all things, explanation, explaining, all things explained, explanation of all things*
+
+###Templates
+When creating a template, you can use variables in the Title, Description, and Keywords fields. Simply use the variable name inside brackets {}.
+
+The available variables depend on the Controller, but most Pages will have available the following list.
+
+- {id} - Automatically assigned integer representing a record in a database.
+- {name} - The human readable title of a Page or Post.
+- {created} - The date and time the record was first created in format yyyy-mm-dd hh:mm:ss.
+- {modified} - The date and time the record was last updated in format yyyy-mm-dd hh:mm:ss.
