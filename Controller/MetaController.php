@@ -279,7 +279,7 @@ class MetaController extends MetaAppController {
 				$filePath = $dir->path . DS . $file;
 				if (is_dir($filePath)) {
 					$paths = array_merge($paths, $this->_findPaths($filePath));
-				} elseif (!stristr($file, 'admin_')) {
+				} elseif (!stristr($file, 'admin_') && stristr($file, '.ctp')) {
 					$fileExt = strchr($file, '.');
 					$fileName = basename($file, $fileExt);
 					$path = str_replace('\\', '/', str_replace(APP.'View', '', $dir->path . DS . $fileName));
