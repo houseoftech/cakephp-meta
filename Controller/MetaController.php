@@ -3,7 +3,7 @@ class MetaController extends MetaAppController {
 	var $name = 'Meta';
 	var $uses = array('Meta.Metum');
 	var $allowedActions = array('index');
-	
+
 	function beforeFilter() {
 		parent::beforeFilter();
 		if (isset($this->Auth)) {
@@ -12,20 +12,20 @@ class MetaController extends MetaAppController {
 			));
 		}
 	}
-	
+
 	public function index($controller = '', $action = '', $pass = '') {
 		if (!isset($this->params['requested'])) {
 			$this->redirect('/');
 		}
-			
+
 		if (empty($controller) || empty($action)) {
 			return false;
 		}
-		
+
 		$conditions = array();
 		$conditions['Metum.controller'] = $controller;
 		$conditions['Metum.action'] = $action;
-		
+
 		// look for deepest level templates first
 		$conditions['template'] = 1;
 		if (isset($pass) && !empty($pass)) {
@@ -43,7 +43,7 @@ class MetaController extends MetaAppController {
 		if ($data && count($data)) {
 			return $data;
 		}
-		
+
 		// no templates found. search for single record
 		unset($conditions['template']);
 		if (isset($pass) && !empty($pass)) {
@@ -51,7 +51,7 @@ class MetaController extends MetaAppController {
 		}
 		return $this->Metum->find('first', array('conditions' => $conditions));
 	}
-	
+
 	public function admin_index() {
 		$filter = $this->_parseFilter();
 		$this->{$this->modelClass}->recursive = 1;
@@ -70,7 +70,7 @@ class MetaController extends MetaAppController {
 					$conditions[$this->modelClass . '.' . $key] =  $condition;
 				}
 			}
-			
+
 			if (is_array($key)) {
 				foreach ($key as $sub_key => $sub_condition) {
 					if (!strpos($sub_key, '.')) {
@@ -83,7 +83,7 @@ class MetaController extends MetaAppController {
 		$this->data = $this->paginate($conditions);
 		$this->render('admin_index');
 	}
-	
+
 	protected function _parseFilter() {
 		$operators = array('equal' => '= ', 'notEqual' => '!= ', 'null' => 'NULL', 'greatherThan' => '> ', 'lessThan' => '< ', 'like' => 'LIKE ', 'between' => 'BETWEEN ', 'in' => 'in');
 		$this->set('filterOptions', $operators);
@@ -137,7 +137,7 @@ class MetaController extends MetaAppController {
 		}
 		return $filter;
 	}
-	
+
 	public function admin_add () {
 		if (!empty ($this->data)) {
 			if ($this->{$this->modelClass}->save($this->data)) {
@@ -157,7 +157,7 @@ class MetaController extends MetaAppController {
 		} else {
 			$this->Session->setFlash('Can\'t delete ' . $this->modelClass . ' with id ' . $id);
 		}
-		
+
 		$url = am(array('action' => 'index'), $this->Session->read($this->name.'_admin_params'));
 	}
 
@@ -181,7 +181,7 @@ class MetaController extends MetaAppController {
 			$this->data = $this->{$this->modelClass}->read(null, $id);
 		}
 	}
-	
+
 	public function admin_initialize() {
 		$count = 0;
 		if ($this->loadModel('Page')) {
@@ -204,17 +204,17 @@ class MetaController extends MetaAppController {
 				}
 			}
 		}
-		
+
 		$data = $this->Metum->find('all', array('fields' => array('path')));
 		$data = Set::extract($data, '{n}.Metum.path');
-		
+
 		$newPaths = array();
 		$newPaths = $this->_findPaths(APP.'View');
 		if (count($newPaths)) {
 			foreach ($newPaths as $path => $info) {
 				if (in_array($path, $data) == false) {
 					$newData['Metum']['path'] = $path;
-					
+
 					$pathArray = explode('/', substr($path, 1), 3);
 					$newData['Metum']['controller'] = $pathArray[0];
 					if (stristr($pathArray[0], 'pages')) {
@@ -231,7 +231,7 @@ class MetaController extends MetaAppController {
 							$newData['Metum']['pass'] = $pathArray[2];
 						}
 					}
-					
+
 					$newData['Metum']['title'] = $info['title'];
 					$newData['Metum']['description'] = $info['description'];
 					$this->Metum->create();
@@ -241,25 +241,26 @@ class MetaController extends MetaAppController {
 				}
 			}
 		}
-		
+
 		if ($count) {
 			$this->Session->setFlash("$count new paths found and saved.");
 		} else {
 			$this->Session->setFlash("No new paths found.");
 		}
-		
+
 		$this->redirect(array('action' => 'index'));
 	}
-	
+
 	private function _findPaths($dir) {
 		if (!is_dir($dir)) {
 			return array();
 		}
-			
+
 		$exclusions = array(
 			'.',
 			'..',
 			'.DS_Store',
+			'.svn',
 			'empty',
 			'ajax.ctp',
 			'Elements',
@@ -273,7 +274,7 @@ class MetaController extends MetaAppController {
 		);
 		$paths = array();
 		$dir = dir($dir);
-	
+
 		while (($file = $dir->read()) !== false) {
 			if (array_search($file, $exclusions) === false) {
 				$filePath = $dir->path . DS . $file;
@@ -283,7 +284,7 @@ class MetaController extends MetaAppController {
 					$fileExt = strchr($file, '.');
 					$fileName = basename($file, $fileExt);
 					$path = str_replace('\\', '/', str_replace(APP.'View', '', $dir->path . DS . $fileName));
-					
+
 					$title = str_replace('/Pages/', '', $path);
 					$title = Inflector::humanize(str_replace('/', ' - ', $title));
 					if (($fileHandle = fopen($filePath, 'r')) !== false) {
@@ -294,11 +295,11 @@ class MetaController extends MetaAppController {
 			}
 		}
 		$dir->close();
-		
+
 		ksort($paths);
 		return $paths;
 	}
-	
+
 	private function _extractDescription($content) {
 		$description = strip_tags($content);
 		$description = preg_replace('/\s\s+/', ' ', $description); // strip whitespace
