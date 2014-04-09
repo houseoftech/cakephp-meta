@@ -1,14 +1,14 @@
-<?php 
+<?php
 $this->Paginator->options(array(
 	'update' => '#content',
 	'evalScripts' => true,
 	'before' => $this->Js->get('#loading_indicator')->effect('fadeIn', array('buffer' => false)),
 	'complete' => $this->Js->get('#loading_indicator')->effect('fadeOut', array('buffer' => false))
 ));
-?> 
+?>
 <h2><?php echo Inflector::humanize($this->params['controller']);?></h2>
 
-<p><?php echo $this->Html->link('Find New Paths', array('action' => 'initialize'));?> | 
+<p><?php echo $this->Html->link('Find New Paths', array('action' => 'initialize'));?> |
 <?php echo $this->Html->link('Add', array('action' => 'add'));?></p>
 
 <?php echo $this->element('paging');?>
@@ -22,9 +22,9 @@ $this->Paginator->options(array(
 	<th class="actions">actions</th>
 </tr>
 <?php
-if(isset($data)):
+if(isset($this->data)):
 	$a=0;
-	foreach($data as $row):
+	foreach($this->data as $row):
 		extract($row);
 		$actions = array();
 		$actions[] = $this->Html->link('E', array('action' => 'edit', ${$modelClass}['id']), array('title' => 'edit'));
@@ -46,9 +46,9 @@ if(isset($data)):
 </tr>
 <?php
 		$a++;
-	endforeach; 
+	endforeach;
 endif;
-?> 
+?>
 </table>
 
 <?php echo $this->element('paging');?>
