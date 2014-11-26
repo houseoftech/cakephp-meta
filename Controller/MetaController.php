@@ -151,7 +151,7 @@ class MetaController extends MetaAppController {
 		$this->render('admin_edit');
 	}
 
-	public function admin_delete($id) {
+	public function admin_delete($id = null) {
 		if ($this->{$this->modelClass}->delete($id)) {
 			$this->Session->setFlash($this->modelClass . ' with id ' . $id . ' deleted');
 		} else {
@@ -161,7 +161,7 @@ class MetaController extends MetaAppController {
 		$url = am(array('action' => 'index'), $this->Session->read($this->name.'_admin_params'));
 	}
 
-	public function admin_edit($id) {
+	public function admin_edit($id = null) {
 		if (!empty ($this->data)) {
 			if ($this->{$this->modelClass}->save($this->data)) {
 				if($this->RequestHandler->isAjax()) {
