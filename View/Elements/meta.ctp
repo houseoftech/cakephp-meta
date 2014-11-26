@@ -31,7 +31,10 @@ if (isset($meta) && is_array($meta)) {
  * Set default site title to domain name
  */
 
-$siteTitle = $_SERVER['HTTP_HOST'];
+$siteTitle = '';
+if (isset($_SERVER['HTTP_HOST'])) {
+	$siteTitle = $_SERVER['HTTP_HOST'];
+}
 
 /**
  * Read from configuration file
@@ -68,8 +71,8 @@ $altTitle = $subTitle . $altTitle;
 
 if (isset($Metum) && !empty($Metum['title'])) {
 	$metaTitle = $Metum['title'];
-} elseif (isset($title_for_layout)) {
-	$metaTitle = $title_for_layout;
+} elseif ($this->fetch('title')) {
+	$metaTitle = $this->fetch('title');
 } else {
 	$metaTitle = $altTitle;
 }
