@@ -1,0 +1,15 @@
+{
+    "name": "houseoftech/cakephp-meta",
+    "type": "cakephp-plugin",
+    "keywords": ["cakephp", "meta", "plugin"],
+    "description": "SEO Plugin for CakePHP 2.x which manages title, meta description, and meta keywords for each page in your application.",
+    "homepage": "http://github.com/houseoftech/cakephp-meta",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3",
+        "composer/installers": "*"
+    },
+    "support": {
+        "issues": "https://github.com/houseoftech/cakephp-meta/issues"
+    }
+}

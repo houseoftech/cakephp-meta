@@ -5,7 +5,16 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 
 ##Installation
 
-1.	Put the Meta folder in your App's Plugin folder.
+1.	Install manually by putting the contents of this repository in a folder named Meta in your App's Plugin folder. Install with composer by adding the following to your composer.json:
+		````
+		"require": {
+			"houseoftech/cakephp-meta": "*"
+		},
+		"repositories": {
+			"type": "vcs",
+			"url": "https://github.com/houseoftech/cakephp-meta"
+		}
+		````
 2.	Add the meta table to your database.
 
 		CREATE TABLE `meta` (
@@ -72,3 +81,6 @@ The available variables depend on the Controller, but most Pages will have avail
 - {name} - The human readable title of a Page or Post.
 - {created} - The date and time the record was first created in format yyyy-mm-dd hh:mm:ss.
 - {modified} - The date and time the record was last updated in format yyyy-mm-dd hh:mm:ss.
+
+##License
+This project is licensed under the terms of the MIT license.
