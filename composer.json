@@ -11,5 +11,8 @@
     },
     "support": {
         "issues": "https://github.com/houseoftech/cakephp-meta/issues"
-    }
+    },
+	"extra": {
+		"installer-name": "Meta"
+	}
 }
