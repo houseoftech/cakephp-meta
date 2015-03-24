@@ -10,10 +10,12 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 		"require": {
 			"houseoftech/cakephp-meta": "*"
 		},
-		"repositories": {
-			"type": "vcs",
-			"url": "https://github.com/houseoftech/cakephp-meta"
-		}
+		"repositories": [
+			{
+				"type": "vcs",
+				"url": "https://github.com/houseoftech/cakephp-meta"
+			}
+		]
 
 2.	Add the meta table to your database.
 
