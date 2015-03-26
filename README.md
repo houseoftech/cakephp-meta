@@ -5,15 +5,18 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 
 ##Installation
 
-1.	Install manually by putting the contents of this repository in a folder named Meta in your App's Plugin folder. Install with composer by adding the following to your composer.json:
+1. Install manually by putting the contents of this repository in a folder named Meta in your App's Plugin folder. Install with composer by adding the following to your composer.json:
 
+	````
 	"require": {
 		"houseoftech/cakephp-meta": "*"
 	}
+	````
 
-2.	Add the meta table to your database.
+2. Add the meta table to your database.
 
-		CREATE TABLE `meta` (
+	````
+	CREATE TABLE `meta` (
 		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		`template` tinyint(1) NOT NULL DEFAULT '0',
 		`path` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -26,11 +29,14 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 		`created` datetime DEFAULT NULL,
 		`modified` datetime DEFAULT NULL,
 		PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci PACK_KEYS=0 ;
+	) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci PACK_KEYS=0 ;
+	````
 
-3.	Call the Meta element in your layout's head.
+3. Call the Meta element in your layout's head.
 
-		<?php echo $this->element('meta', array(), array('plugin' => 'Meta'));?>
+	````
+	<?php echo $this->element('meta', array(), array('plugin' => 'Meta'));?>
+	````
 
 ##How to Use
 
