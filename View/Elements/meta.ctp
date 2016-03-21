@@ -1,8 +1,7 @@
 <?php
-$meta = $this->requestAction('/meta/meta/index/'.$this->request->controller .'/'. $this->request->action .'/'. implode('#', $this->request->pass));
 
-if (isset($meta) && is_array($meta)) {
-	extract($meta);
+if (isset($metaPluginData) && is_array($metaPluginData)) {
+	extract($metaPluginData);
 	// replace variables with field values
 	$tags = array('id', 'name', 'created', 'modified');
 	if (isset($this->viewVars['data'][$this->viewVars['modelClass']])) {

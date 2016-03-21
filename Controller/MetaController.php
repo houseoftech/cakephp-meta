@@ -13,45 +13,6 @@ class MetaController extends MetaAppController {
 		}
 	}
 
-	public function index($controller = '', $action = '', $pass = '') {
-		if (!isset($this->params['requested'])) {
-			$this->redirect('/');
-		}
-
-		if (empty($controller) || empty($action)) {
-			return false;
-		}
-
-		$conditions = array();
-		$conditions['Metum.controller'] = $controller;
-		$conditions['Metum.action'] = $action;
-
-		// look for deepest level templates first
-		$conditions['template'] = 1;
-		if (isset($pass) && !empty($pass)) {
-			$passArray = array_reverse(explode('#', $pass));
-			foreach($passArray as $passPart) {
-				$conditions['Metum.pass'] = str_replace($passPart, '*', str_replace('#', '/', $pass));
-				$data = $this->Metum->find('first', array('conditions' => $conditions));
-				if ($data && count($data)) {
-					return $data;
-				}
-			}
-		}
-		unset($conditions['Metum.pass']);
-		$data = $this->Metum->find('first', array('conditions' => $conditions));
-		if ($data && count($data)) {
-			return $data;
-		}
-
-		// no templates found. search for single record
-		unset($conditions['template']);
-		if (isset($pass) && !empty($pass)) {
-			$conditions['Metum.pass'] = str_replace('#', '/', $pass);
-		}
-		return $this->Metum->find('first', array('conditions' => $conditions));
-	}
-
 	public function admin_index() {
 		$filter = $this->_parseFilter();
 		$this->{$this->modelClass}->recursive = 1;
@@ -308,4 +269,3 @@ class MetaController extends MetaAppController {
 		return $description;
 	}
 }
-?>
