@@ -69,7 +69,7 @@ When creating a template, leave this field blank.
 *The Explanation of All Things*
 
 ###Description
-*All things need some sort of explanation. Explaning all things is not always easy, but I will attempt to do so anyways.*
+*All things need some sort of explanation. Explaining all things is not always easy, but I will attempt to do so anyways.*
 
 ###Keywords
 *all things, explanation, explaining, all things explained, explanation of all things*
