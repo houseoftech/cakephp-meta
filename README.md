@@ -52,7 +52,7 @@ Given a URL such as *http://your_domain/pages/My-Wonderful-Page-In-Which-I-Expla
 
 This is for your benefit, so you know which page it corresponds to. */pages/My-Wonderful-Page-In-Which-I-Explain-All-Things*
 
-To create a template use an asterix as a wildcard. /articles/view/* would match any Path beginning with /articles/view/
+To create a template use an asterisk as a wildcard. /articles/view/* would match any Path beginning with /articles/view/
 
 ###Controller
 *pages*
