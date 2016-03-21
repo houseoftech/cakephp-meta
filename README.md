@@ -35,7 +35,7 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 3. Call the Meta element in your layout's head.
 
 	````
-	<?php echo $this->element('meta', array(), array('plugin' => 'Meta'));?>
+	<?php echo $this->element('Meta.meta');?>
 	````
 
 ##How to Use
