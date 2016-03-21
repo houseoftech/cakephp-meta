@@ -35,7 +35,7 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 3. Call the Meta element in your layout's head.
 
 	````
-	<?php echo $this->element('meta', array(), array('plugin' => 'Meta'));?>
+	<?php echo $this->element('Meta.meta');?>
 	````
 
 ##How to Use
@@ -52,7 +52,7 @@ Given a URL such as *http://your_domain/pages/My-Wonderful-Page-In-Which-I-Expla
 
 This is for your benefit, so you know which page it corresponds to. */pages/My-Wonderful-Page-In-Which-I-Explain-All-Things*
 
-To create a template use an asterix as a wildcard. /articles/view/* would match any Path beginning with /articles/view/
+To create a template use an asterisk as a wildcard. /articles/view/* would match any Path beginning with /articles/view/
 
 ###Controller
 *pages*
@@ -69,7 +69,7 @@ When creating a template, leave this field blank.
 *The Explanation of All Things*
 
 ###Description
-*All things need some sort of explanation. Explaning all things is not always easy, but I will attempt to do so anyways.*
+*All things need some sort of explanation. Explaining all things is not always easy, but I will attempt to do so anyways.*
 
 ###Keywords
 *all things, explanation, explaining, all things explained, explanation of all things*
