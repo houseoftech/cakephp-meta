@@ -1,11 +1,13 @@
 <?php
+namespace Controller;
+
 class MetaController extends MetaAppController {
 	var $name = 'Meta';
 	var $uses = array('Meta.Metum');
 	var $allowedActions = array('index');
 
-	function beforeFilter() {
-		parent::beforeFilter();
+	function beforeFilter(Event $event) {
+		parent::beforeFilter($event);
 		if (isset($this->Auth)) {
 			$this->Auth->mapActions(array(
 				'create' => array('admin_initialize')

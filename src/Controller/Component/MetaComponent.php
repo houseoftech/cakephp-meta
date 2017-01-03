@@ -1,5 +1,6 @@
 <?php
-App::uses('Component', 'Controller');
+namespace Controller\Component;
+
 class MetaComponent extends Component {
 	public $controllerName = null;
 	public $actionName = null;
