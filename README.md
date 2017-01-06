@@ -1,6 +1,8 @@
 #Meta Plugin for CakePHP 2.x
 
 Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and meta keywords for each page in your application.
+
+For CakePHP 3.x compatible version see the [3.x branch](https://github.com/houseoftech/cakephp-meta/tree/3.x).
 - - -
 
 ##Installation
@@ -9,7 +11,7 @@ Meta is an SEO Plugin for CakePHP 2.x which manages title, meta description, and
 
 	````
 	"require": {
-		"houseoftech/cakephp-meta": "*"
+		"houseoftech/cakephp-meta": "2.0.0"
 	}
 	````
 
