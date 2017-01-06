@@ -1,13 +1,40 @@
 <?php
-namespace Controller\Component;
+namespace Meta\Controller\Component;
 
-class MetaComponent extends Component {
+use Cake\Controller\Component;
+use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
+use Cake\Core\Configure;
+
+class MetaComponent extends Component
+{
 	public $controllerName = null;
 	public $actionName = null;
 	public $passArray = null;
 	public $passString = null;
 
-	public function beforeRender(Controller $controller) {
+	public function initialize(array $config)
+	{
+		parent::initialize($config);
+		// Local app config file
+		$appConfig = (array)Configure::read('Meta');
+		
+		// Default Plugin config
+		Configure::load('Meta.meta_plugin');
+		$defaultConf = (array)Configure::read('Meta');
+		
+		// Merge configs such that Plugin config is default,
+		// which can be overwritten by app config,
+		// which can be overwritten by loadComponent config
+		$config = array_merge($defaultConf, $appConfig, $config);
+		
+		Configure::write('Meta', $config);
+	}
+	
+	public function beforeRender(Event $event)
+	{
+		$controller = $event->subject();
+		
 		if ($controller->name == 'CakeError') {
 			return;
 		}
@@ -24,22 +51,27 @@ class MetaComponent extends Component {
 		
 		$data = $this->_lookup();
 		$this->Controller->set('metaPluginData', $data);
+		$this->Controller->set('defaultTitle', Configure::read('Meta.defaultTitle'));
+		$this->Controller->set('defaultDescription', Configure::read('Meta.defaultDescription'));
+		$this->Controller->set('defaultKeywords', Configure::read('Meta.defaultKeywords'));
 	}
 	
-    private function _lookup() {
-		$this->Metum = ClassRegistry::init('Meta.Metum');
-		$conditions = array();
-		$conditions['Metum.controller'] = $this->controllerName;
-		$conditions['Metum.action'] = $this->actionName;
+    private function _lookup()
+	{
+		$meta = TableRegistry::get('Meta.Meta');
+		$conditions = [];
+		$conditions['Meta.controller'] = $this->controllerName;
+		$conditions['Meta.action'] = $this->actionName;
 		
 		// look for deepest level templates first
 		$conditions['template'] = 1;
 		if (isset($this->passArray) && !empty($this->passArray)) {
 			$this->passString = implode('/', $this->passArray);
 			$passArray = array_reverse($this->passArray);
+			
 			foreach($passArray as $passPart) {
-				$conditions['Metum.pass'] = str_replace($passPart, '*', $this->passString);
-				$data = $this->Metum->find('first', array('conditions' => $conditions));
+				$conditions['Meta.pass'] = str_replace($passPart, '*', $this->passString);
+				$data = $meta->find('all', ['conditions' => $conditions])->first();
 				if ($data && count($data)) {
 					return $data;
 				}
@@ -49,17 +81,25 @@ class MetaComponent extends Component {
 		// no specific templates found. search for single record
 		unset($conditions['template']);
 		if (isset($this->passString) && !empty($this->passString)) {
-			$conditions['Metum.pass'] = $this->passString;
+			$conditions['Meta.pass'] = $this->passString;
 		}
-		$data = $this->Metum->find('first', array('conditions' => $conditions));
+		$data = $meta->find('all', ['conditions' => $conditions])->first();
 		if (count($data)) {
 			return $data;
 		}
 		
 		// search for general template
 		$conditions['template'] = 1;
-		unset($conditions['Metum.pass']);
-		$data = $this->Metum->find('first', array('conditions' => $conditions));
+		unset($conditions['Meta.pass']);
+		$data = $meta->find('all', ['conditions' => $conditions])->first();
+		if (count($data)) {
+			return $data;
+		}
+		
+		// search for base record without pass
+		unset($conditions['template']);
+		unset($conditions['Meta.pass']);
+		$data = $meta->find('all', ['conditions' => $conditions])->first();
 		
 		return $data;
     }
