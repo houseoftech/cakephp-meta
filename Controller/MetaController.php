@@ -120,6 +120,7 @@ class MetaController extends MetaAppController {
 		}
 
 		$url = am(array('action' => 'index'), $this->Session->read($this->name.'_admin_params'));
+		$this->redirect($url, null, true);
 	}
 
 	public function admin_edit($id = null) {
